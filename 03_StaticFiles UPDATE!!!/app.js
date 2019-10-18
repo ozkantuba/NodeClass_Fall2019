@@ -15,6 +15,20 @@ app.use(express.static('public'))
 console.log('server running');
 
 
+var socket = require ('socket.io')
+var io = socket(server);
+
+io.on('connection', newConnection)
+
+function newConnection(socket){
+	socket.broadcast.emit('newUser', socket.id + 'has joined to chat');
+	console.log('new connection: ' + socket.id)
+	socket.emit('confirmConnection', 'hey I am in' + socket.id);
+	socket.on('newMsg', function(data){
+		socket.broadcast.emit('newMsg', data)
+	})
+}
+
 
 
 
